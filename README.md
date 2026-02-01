@@ -1,3 +1,26 @@
+# CodeImpact
+
+CodeImpact is an IntelliJ IDEA plugin designed to help Java developers identify complex performance issues and reliability risks before they reach production. By integrating impact analysis directly into the editor, it shifts quality assurance left, allowing engineers to visualize the "blast radius" of their changes and apply architectural optimizations instantly.
+
+## Core Capabilities
+
+**1. Algorithmic Complexity Analysis**
+Automatically scans method logic to identify high-complexity patterns, such as nested O(n^2) loops, blocking I/O operations on the main thread, and potential memory leaks. It provides one-click refactoring suggestions to transition synchronous logic to asynchronous, non-blocking patterns using modern Java concurrency.
+
+**2. Automated Defensive Programming**
+Enforces stability by detecting methods with insufficient input validation. The plugin identifies risky parameters and automatically injects defensive guard clauses to prevent NullPointerExceptions and invalid state errors, ensuring strictly typed and verified inputs.
+
+**3. Dependency Topography Visualization**
+Generates interactive architectural diagrams that map the downstream impact of a specific method. This feature visualizes hidden dependencies on infrastructure components—such as databases, global caches, and external APIs—providing developers with immediate context on the structural consequences of their code changes.
+
+**4. Context-Aware Navigation**
+Streamlines code navigation by linking business logic directly to its infrastructure dependencies. Developers can trace execution paths from source methods to target destinations (e.g., connection pools, event dispatchers) without manually searching the codebase.
+
+## Technical Implementation
+
+Built using the IntelliJ Platform SDK and Kotlin, CodeImpact leverages standard PsiElement analysis to interpret code structure in real-time. Architectural visualizations are rendered using Mermaid.js within a JCEF browser instance, ensuring a seamless and native integration with the IDE's dark mode and UI standards.
+
+
 # IntelliJ Platform Plugin Template
 
 [![Twitter Follow](https://img.shields.io/badge/follow-%40JBPlatform-1DA1F2?logo=twitter)](https://twitter.com/JBPlatform)
