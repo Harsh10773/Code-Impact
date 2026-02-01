@@ -1,0 +1,118 @@
+package com.hackathon.demo;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+
+public class LeaderboardService {
+
+    // =========================================================================
+    // 🟢 RUN THIS MAIN METHOD TO TEST THE DEMO
+    // =========================================================================
+    public static void main(String[] args) {
+        LeaderboardService service = new LeaderboardService();
+
+        // 1. Setup Dummy Data
+        List<User> users = new ArrayList<>();
+        Random rand = new Random();
+        for (int i = 0; i < 10; i++) {
+            users.add(new User("User-" + i, rand.nextInt(100)));
+        }
+
+        System.out.println("--- 🚀 STARTING REPORT GENERATION ---");
+        long start = System.currentTimeMillis();
+
+        // 2. Run the Method (This is what we will optimize!)
+        service.generateReport(users);
+
+        long end = System.currentTimeMillis();
+        System.out.println("--- ✅ DONE (Time: " + (end - start) + "ms) ---");
+
+        // Print Top Winner to prove logic worked
+        System.out.println("Winner: " + users.get(0).name + " (Score: " + users.get(0).score + ")");
+    }
+
+    // =========================================================================
+    // SCENE 1: The "Source" (Caller)
+    // =========================================================================
+    public void generateReport(List<User> users) {
+        System.out.println("[Logic] Sorting users...");
+
+        // ⚡ RISK: Nested Loop (O(N^2))
+        // This is the slow part!
+        for (int i = 0; i < users.size(); i++) {
+            for (int j = 0; j < users.size(); j++) {
+                if (users.get(i).score > users.get(j).score) {
+                    swap(users, i, j);
+                }
+                // Simulate CPU load
+                try { Thread.sleep(5); } catch (Exception e) {}
+            }
+        }
+
+        // 🎯 TARGET 1: Database (Click Target -> Jump Here)
+        Database.save(users);
+
+        // 🎯 TARGET 2: Cache
+        GlobalCache.invalidate();
+
+        // 🎯 TARGET 3: Email
+        EmailService.blastWinners(users.get(0));
+    }
+
+    private void swap(List<User> u, int i, int j) {
+        User temp = u.get(i);
+        u.set(i, u.get(j));
+        u.set(j, temp);
+    }
+
+    // =========================================================================
+    // SCENE 2: The "Destinations" (Callees)
+    // You will see a ⬅️ Back Arrow next to these methods!
+    // =========================================================================
+
+    static class Database {
+        // ⬅️ CLICK BACK ARROW HERE
+        public static void save(List<User> u) {
+            System.out.println("[Database] Saving " + u.size() + " users...");
+            // ➡️ FORWARD DEPENDENCY: Connection Pool
+            ConnectionPool.getConnection();
+            try { Thread.sleep(100); } catch (Exception e) {} // Simulate I/O Latency
+        }
+    }
+
+    static class GlobalCache {
+        // ⬅️ CLICK BACK ARROW HERE
+        public static void invalidate() {
+            System.out.println("[Cache] Invalidating old records...");
+        }
+    }
+
+    static class EmailService {
+        // ⬅️ CLICK BACK ARROW HERE
+        public static void blastWinners(User u) {
+            System.out.println("[Email] Sending blast to winner: " + u.name);
+            try { Thread.sleep(200); } catch (Exception e) {} // Simulate API Latency
+        }
+    }
+
+    static class User {
+        public String name;
+        public int score;
+
+        public User(String name, int score) {
+            this.name = name;
+            this.score = score;
+        }
+    }
+
+    // =========================================================================
+    // SCENE 3: The "Deep" Dependency
+    // =========================================================================
+    static class ConnectionPool {
+        public static void getConnection() {
+            System.out.println("[Pool] Acquiring JDBC Connection...");
+        }
+    }
+}

@@ -1,0 +1,49 @@
+<idea-plugin>
+    <id>com.hackathon.codeimpact</id>
+    <name>CodeImpact</name>
+    <vendor>HackathonTeam</vendor>
+
+    <description>Analyzes code complexity and dependency impact.</description>
+
+    <dependencies>
+        <plugin id="com.intellij.modules.platform"/>
+        <plugin id="com.intellij.java"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="CodeImpact"
+                    secondary="true"
+                    icon="AllIcons.General.Modified"
+                    anchor="right"
+                    factoryClass="com.hackathon.codeimpact.ImpactToolWindowFactory"/>
+
+        <codeInsight.lineMarkerProvider
+                language="JAVA"
+                implementationClass="com.hackathon.codeimpact.OptimizationMarkerProvider"/>
+
+        <codeInsight.lineMarkerProvider
+                language="kotlin"
+                implementationClass="com.hackathon.codeimpact.OptimizationMarkerProvider"/>
+
+
+    </extensions>
+
+    <actions>
+        <action id="AnalyzeImpactAction"
+                class="com.hackathon.codeimpact.AnalyzeAction"
+                text="CodeImpact"
+                description="Checks for side effects and optimizes">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt A"/>
+        </action>
+
+        <action id="com.hackathon.codeimpact.GenerateUnitTestAction"
+                class="com.hackathon.codeimpact.GenerateUnitTestAction"
+                text="✨ Generate AI Unit Test"
+                description="Generates a JUnit test based on method logic">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
+
+    </actions>
+
+</idea-plugin>
